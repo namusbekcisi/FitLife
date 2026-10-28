@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FitLife | Akıllı Kalori & Beslenme Takibi</title>
+    <style>
+        :root {
+            --bg-cream: #F8F7F3;
+            --surface: #FFFFFF;
+            --surface-soft: #F1EFEA;
+            --anthracite: #1E242B;
+            --anthracite-light: #5A626A;
+            --emerald: #10B981;
+            --emerald-dark: #059669;
+            --emerald-soft: #D1FAE5;
+            --amber: #F59E0B;
+            --danger: #EF4444;
+            --danger-soft: #FEE2E2;
+            --blue: #3B82F6;
+            --blue-soft: #DBEAFE;
+            --border: #E5E3DC;
+            --radius-lg: 20px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 8px 24px rgba(30, 36, 43, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-cream);
+            color: var(--anthracite);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 540px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 40px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Butonlar ve Inputlar */
+        input, select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-md);
+            background: var(--surface);
+            color: var(--anthracite);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--emerald);
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--anthracite-light);
+            margin-bottom: 6px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--emerald);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: var(--emerald-dark);
+        }
+
+        .btn-secondary {
+            background: var(--surface-soft);
+            color: var(--anthracite);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Kart Yapısı */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(229, 227, 220, 0.6);
+            margin-bottom: 16px;
+        }
+
+        /* Giriş / Kayıt Ekranı */
+        .auth-wrapper {
+            margin: auto 16px;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .brand-logo {
+            width: 56px;
+            height: 56px;
+            background: var(--emerald);
+            color: white;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.25);
+        }
+
+        .brand-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-sub {
+            font-size: 14px;
+            color: var(--anthracite-light);
+        }
+
+        .tabs {
+            display: flex;
+            background: var(--surface-soft);
+            padding: 4px;
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--anthracite-light);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: var(--surface);
+            color: var(--anthracite);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Üst Bar */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 16px 8px 16px;
+        }
+
+        .user-greeting {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .icon-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--anthracite);
+            cursor: pointer;
+        }
+
+        /* 30 Günlük Tarih Şeridi */
+        .date-strip {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding: 10px 16px;
+            scrollbar-width: none;
+        }
+        .date-strip::-webkit-scrollbar { display: none; }
+
+        .date-item {
+            min-width: 58px;
+            padding: 10px 6px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .date-item .d-name {
+            font-size: 11px;
+            color: var(--anthracite-light);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .date-item .d-num {
+            font-size: 16px;
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .date-item.active {
+            background: var(--anthracite);
+            border-color: var(--anthracite);
+            color: #fff;
+        }
+
+        .date-item.active .d-name {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .date-item.has-data::after {
+            content: '';
+            display: block;
+            width: 5px;
+            height: 5px;
+            background: var(--emerald);
+            border-radius: 50%;
+            margin: 4px auto 0;
+        }
+
+        .main-content {
+            padding: 8px 16px;
+        }
+
+        /* Ana Kalori Özeti & Bar */
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 12px;
+        }
+
+        .cal-big {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.1;
+        }
+
+        .cal-sub {
+            font-size: 13px;
+            color: var(--anthracite-light);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .badge-ok { background: var(--emerald-soft); color: var(--emerald-dark); }
+        .badge-over { background: var(--danger-soft); color: var(--danger); }
+
+        .progress-track {
+            width: 100%;
+            height: 14px;
+            background: var(--surface-soft);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-bottom: 18px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--emerald);
+            border-radius: 99px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+
+        .progress-fill.over {
+            background: var(--danger);
+        }
+
+        /* Makro Barları */
+        .macro-box {
+            background: var(--bg-cream);
+            padding: 12px;
+            border-radius: var(--radius-md);
+        }
+
+        .macro-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--anthracite-light);
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .macro-val {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .macro-bar {
+            height: 6px;
+            background: var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .macro-bar-fill {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 0.3s ease;
+        }
+
+        /* Su Takibi */
+        .water-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #FFFFFF 0%, #F0F7FF 100%);
+        }
+
+        .water-info h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .water-info p {
+            font-size: 13px;
+            color: var(--anthracite-light);
+        }
+
+        .water-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .water-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .water-add { background: var(--blue); color: #fff; }
+        .water-sub { background: var(--blue-soft); color: var(--blue); }
+
+        /* Öğün Bölümleri */
+        .meal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .meal-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .meal-cal {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--emerald-dark);
+            background: var(--emerald-soft);
+            padding: 4px 10px;
+            border-radius: 99px;
+        }
+
+        .food-list {
+            list-style: none;
+            margin-bottom: 12px;
+        }
+
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--surface-soft);
+        }
+
+        .food-item:last-child {
+            border-bottom: none;
+        }
+
+        .food-item-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .food-item-meta {
+            font-size: 12px;
+            color: var(--anthracite-light);
+        }
+
+        .food-item-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .food-item-cal {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .add-meal-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--surface-soft);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--anthracite);
+            cursor: pointer;
+        }
+
+        .add-meal-btn:hover {
+            border-color: var(--emerald);
+            color: var(--emerald-dark);
+        }
+
+        /* Modal (Yemek Arama & Ayarlar) */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(30, 36, 43, 0.5);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-sheet {
+            background: var(--surface);
+            width: 100%;
+            max-width: 540px;
+            max-height: 90vh;
+            border-radius: 24px 24px 0 0;
+            padding: 20px;
+            overflow-y: auto;
+            animation: slideUp 0.25s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .close-btn {
+            background: var(--surface-soft);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .search-results {
+            max-height: 220px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            margin-top: 8px;
+            margin-bottom: 16px;
+        }
+
+        .search-item {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--surface-soft);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-item:hover {
+            background: var(--emerald-soft);
+        }
+
+        .search-item-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .search-item-sub {
+            font-size: 12px;
+            color: var(--anthracite-light);
+        }
+
+        .msg-text {
+            font-size: 13px;
+            color: var(--danger);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .auto-save-tag {
+            font-size: 11px;
+            color: var(--emerald-dark);
+            background: var(--emerald-soft);
+            padding: 3px 8px;
+            border-radius: 99px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- 1. GİRİŞ VE KAYIT EKRANI -->
+    <div id="authScreen" class="auth-wrapper">
+        <div class="brand-header">
+            <div class="brand-logo">F</div>
+            <h1 class="brand-title">FitLife</h1>
+            <p class="brand-sub">Kişisel Kalori ve Makro Asistanınız</p>
+        </div>
+
+        <div class="card">
+            <div class="tabs">
+                <button class="tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')">Giriş Yap</button>
+                <button class="tab-btn" id="tabRegBtn" onclick="switchAuthTab('register')">Kayıt Ol</button>
+            </div>
+
+            <div id="authError" class="msg-text hidden"></div>
+
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <div class="form-group">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" id="authUser" required placeholder="Örn: ahmet123" autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label>Şifre</label>
+                    <input type="password" id="authPass" required placeholder="••••••" autocomplete="current-password">
+                </div>
+                <button type="submit" class="btn btn-primary" id="authSubmitBtn">Giriş Yap</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. PROFİL & HEDEF KURULUM SİHİRBAZI -->
+    <div id="setupScreen" class="main-content hidden" style="margin-top: 20px;">
+        <div class="card">
+            <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Profilinizi Oluşturalım</h2>
+            <p style="font-size: 13px; color: var(--anthracite-light); margin-bottom: 20px;">Size en uygun kalori ve besin değerlerini hesaplamak için birkaç bilgiye ihtiyacımız var.</p>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Cinsiyet</label>
+                    <select id="pGender" onchange="calculateSuggestions()">
+                        <option value="male">Erkek</option>
+                        <option value="female">Kadın</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Yaş</label>
+                    <input type="number" id="pAge" value="28" min="12" max="100" oninput="calculateSuggestions()">
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Boy (cm)</label>
+                    <input type="number" id="pHeight" value="175" min="120" max="230" oninput="calculateSuggestions()">
+                </div>
+                <div class="form-group">
+                    <label>Kilo (kg)</label>
+                    <input type="number" id="pWeight" value="75" min="35" max="250" oninput="calculateSuggestions()">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Günlük Hareket Seviyeniz</label>
+                <select id="pActivity" onchange="calculateSuggestions()">
+                    <option value="1.2">Masa başı / Az hareketli</option>
+                    <option value="1.375" selected>Hafif hareketli (Haftada 1-3 gün yürüyüş/spor)</option>
+                    <option value="1.55">Orta hareketli (Haftada 3-5 gün spor)</option>
+                    <option value="1.725">Çok hareketli (Haftada 6-7 gün yoğun spor)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Amacınız Nedir?</label>
+                <select id="pGoal" onchange="calculateSuggestions()">
+                    <option value="-450">Kilo Vermek İstiyorum</option>
+                    <option value="0" selected>Kilomu Korumak İstiyorum</option>
+                    <option value="350">Kilo / Kas Almak İstiyorum</option>
+                </select>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border); margin: 20px 0;">
+
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3 style="font-size: 16px; font-weight: 800;">Önerilen Günlük Hedefleriniz</h3>
+                <span style="font-size: 11px; color: var(--emerald-dark); font-weight: 600;">İsterseniz değiştirebilirsiniz</span>
+            </div>
+
+            <div class="form-group">
+                <label>Günlük Kalori Hedefi (kcal)</label>
+                <input type="number" id="tCal" min="800" max="6000">
+            </div>
+
+            <div class="grid-3">
+                <div class="form-group">
+                    <label>Karbonhidrat (g)</label>
+                    <input type="number" id="tCarb" min="10" max="800">
+                </div>
+                <div class="form-group">
+                    <label>Protein (g)</label>
+                    <input type="number" id="tProt" min="10" max="400">
+                </div>
+                <div class="form-group">
+                    <label>Yağ (g)</label>
+                    <input type="number" id="tFat" min="10" max="300">
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveProfile()">Hedefleri Kaydet ve Başla</button>
+        </div>
+    </div>
+
+    <!-- 3. ANA UYGULAMA EKRANI -->
+    <div id="dashboardScreen" class="hidden">
+        <div class="top-nav">
+            <div>
+                <div class="user-greeting" id="welcomeText">Merhaba!</div>
+                <span class="auto-save-tag">✓ Otomatik Kayıt Aktif</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="icon-btn" onclick="openProfileSetup()">Hedeflerim</button>
+                <button class="icon-btn" onclick="logout()">Çıkış</button>
+            </div>
+        </div>
+
+        <!-- 30 Günlük Geçmiş Takvim Şeridi -->
+        <div class="date-strip" id="dateStrip"></div>
+
+        <div class="main-content">
+            <!-- Kalori ve Makro Kartı -->
+            <div class="card">
+                <div class="cal-header">
+                    <div>
+                        <div class="cal-sub">Alınan / Hedef Kalori</div>
+                        <div class="cal-big"><span id="curCal">0</span> <span style="font-size:18px; font-weight:600; color:var(--anthracite-light);">/ <span id="goalCal">2000</span> kcal</span></div>
+                    </div>
+                    <div id="calStatusBadge" class="status-badge badge-ok">2000 kcal kaldı</div>
+                </div>
+
+                <div class="progress-track">
+                    <div id="calProgressBar" class="progress-fill" style="width: 0%;"></div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="macro-box">
+                        <div class="macro-title"><span>Karbonhidrat</span></div>
+                        <div class="macro-val"><span id="curCarb">0</span> / <span id="goalCarb">250</span>g</div>
+                        <div class="macro-bar"><div id="barCarb" class="macro-bar-fill" style="width:0%; background: var(--amber);"></div></div>
+                    </div>
+                    <div class="macro-box">
+                        <div class="macro-title"><span>Protein</span></div>
+                        <div class="macro-val"><span id="curProt">0</span> / <span id="goalProt">120</span>g</div>
+                        <div class="macro-bar"><div id="barProt" class="macro-bar-fill" style="width:0%; background: var(--emerald);"></div></div>
+                    </div>
+                    <div class="macro-box">
+                        <div class="macro-title"><span>Yağ</span></div>
+                        <div class="macro-val"><span id="curFat">0</span> / <span id="goalFat">65</span>g</div>
+                        <div class="macro-bar"><div id="barFat" class="macro-bar-fill" style="width:0%; background: var(--blue);"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Su Takibi Kartı -->
+            <div class="card water-card">
+                <div class="water-info">
+                    <h4>💧 Günlük Su Takibi</h4>
+                    <p><strong id="waterCount">0</strong> Bardak (<span id="waterMl">0</span> ml) içildi</p>
+                </div>
+                <div class="water-controls">
+                    <button class="water-btn water-sub" onclick="changeWater(-1)">-</button>
+                    <button class="water-btn water-add" onclick="changeWater(1)">+</button>
+                </div>
+            </div>
+
+            <!-- Öğünler Listesi -->
+            <div id="mealsContainer"></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- YEMEK ARAMA VE EKLEME MODALI -->
+<div id="foodModal" class="modal-overlay hidden" onclick="if(event.target===this) closeFoodModal()">
+    <div class="modal-sheet">
+        <div class="modal-top">
+            <div class="modal-title" id="modalMealTitle">Öğün Ekle</div>
+            <button class="close-btn" onclick="closeFoodModal()">✕</button>
+        </div>
+
+        <div class="form-group">
+            <label>Ne Yediniz? (Yazın, listeden veya internetten seçin)</label>
+            <input type="text" id="foodSearchInput" placeholder="Örn: Yumurta, Pilav, Mercimek Çorbası, Elma..." oninput="handleFoodSearch(this.value)">
+        </div>
+
+        <div id="searchStatus" style="font-size:12px; color:var(--anthracite-light); margin-bottom:6px;" class="hidden">İnternetten aranıyor...</div>
+        <div id="searchResults" class="search-results hidden"></div>
+
+        <div style="background: var(--bg-cream); padding: 14px; border-radius: var(--radius-md); margin-bottom: 16px;">
+            <div class="form-group">
+                <label>Seçilen / Girilen Besin Adı</label>
+                <input type="text" id="fName" placeholder="Besin adı">
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Miktar</label>
+                    <input type="number" id="fAmount" value="1" min="0.1" step="0.5" oninput="recalcSelectedFood()">
+                </div>
+                <div class="form-group">
+                    <label>Ölçü Birimi</label>
+                    <select id="fUnit" onchange="recalcSelectedFood()">
+                        <option value="100">Porsiyon (100g)</option>
+                        <option value="1">Gram (gr)</option>
+                        <option value="15">Yemek Kaşığı (~15g)</option>
+                        <option value="200">Su Bardağı (~200g)</option>
+                        <option value="150">Kase (~150g)</option>
+                        <option value="60">Adet - Orta (~60g)</option>
+                        <option value="30">İnce Dilim (~30g)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 8px;">
+                <div>
+                    <label>Kalori (kcal)</label>
+                    <input type="number" id="fCal" value="0" min="0">
+                </div>
+                <div>
+                    <label>Karbonhidrat (g)</label>
+                    <input type="number" id="fCarb" value="0" min="0">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div>
+                    <label>Protein (g)</label>
+                    <input type="number" id="fProt" value="0" min="0">
+                </div>
+                <div>
+                    <label>Yağ (g)</label>
+                    <input type="number" id="fFat" value="0" min="0">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn btn-primary" onclick="confirmAddFood()">Öğüne Ekle</button>
+    </div>
+</div>
+
+<script>
+    // --- YEREL HIZLI BESİN VERİTABANI (100 gram değerleri + varsayılan birim) ---
+    const LOCAL_FOODS = [
+        { name: "Haşlanmış Yumurta", cal: 155, carb: 1.1, prot: 12.6, fat: 10.6, defUnit: "60", defAmt: 1 },
+        { name: "Sahanda Yumurta", cal: 196, carb: 0.8, prot: 13.6, fat: 14.8, defUnit: "60", defAmt: 1 },
+        { name: "Beyaz Peynir (Tam Yağlı)", cal: 264, carb: 2.5, prot: 17, fat: 21, defUnit: "30", defAmt: 1 },
+        { name: "Kaşar Peyniri", cal: 350, carb: 1.5, prot: 25, fat: 27, defUnit: "30", defAmt: 1 },
+        { name: "Siyah / Yeşil Zeytin", cal: 145, carb: 3.8, prot: 1, fat: 15, defUnit: "15", defAmt: 1 },
+        { name: "Beyaz Ekmek", cal: 265, carb: 49, prot: 9, fat: 3.2, defUnit: "30", defAmt: 1 },
+        { name: "Tam Buğday Ekmeği", cal: 247, carb: 41, prot: 13, fat: 3.4, defUnit: "30", defAmt: 1 },
+        { name: "Yulaf Ezmesi", cal: 389, carb: 66, prot: 16.9, fat: 6.9, defUnit: "15", defAmt: 3 },
+        { name: "Süt (Tam Yağlı)", cal: 61, carb: 4.8, prot: 3.2, fat: 3.3, defUnit: "200", defAmt: 1 },
+        { name: "Yoğurt", cal: 61, carb: 4.7, prot: 3.5, fat: 3.3, defUnit: "200", defAmt: 1 },
+        { name: "Ayran", cal: 37, carb: 2.8, prot: 2, fat: 2, defUnit: "200", defAmt: 1 },
+        { name: "Tavuk Göğsü (Izgara/Haşlama)", cal: 165, carb: 0, prot: 31, fat: 3.6, defUnit: "100", defAmt: 1.5 },
+        { name: "Dana Köfte (Izgara)", cal: 250, carb: 5, prot: 24, fat: 15, defUnit: "30", defAmt: 4 },
+        { name: "Dana Kuşbaşı / Sote", cal: 210, carb: 2, prot: 26, fat: 11, defUnit: "100", defAmt: 1.5 },
+        { name: "Somon / Balık (Izgara)", cal: 208, carb: 0, prot: 20, fat: 13, defUnit: "100", defAmt: 1.5 },
+        { name: "Pirinç Pilavı", cal: 150, carb: 28, prot: 2.7, fat: 3.2, defUnit: "15", defAmt: 6 },
+        { name: "Bulgur Pilavı", cal: 125, carb: 24, prot: 4, fat: 2, defUnit: "15", defAmt: 6 },
+        { name: "Makarna (Haşlanmış/Soslu)", cal: 158, carb: 31, prot: 5.8, fat: 1.2, defUnit: "100", defAmt: 1.5 },
+        { name: "Mercimek Çorbası", cal: 65, carb: 10, prot: 3.5, fat: 1.5, defUnit: "150", defAmt: 1 },
+        { name: "Domates / Ezogelin Çorbası", cal: 55, carb: 9, prot: 2, fat: 1.5, defUnit: "150", defAmt: 1 },
+        { name: "Kuru Fasulye / Nohut Yemeği", cal: 135, carb: 19, prot: 7.5, fat: 3.5, defUnit: "150", defAmt: 1 },
+        { name: "Zeytinyağlı Sebze Yemeği", cal: 85, carb: 8, prot: 2, fat: 5, defUnit: "150", defAmt: 1 },
+        { name: "Mevsim Salata (Az Yağlı)", cal: 45, carb: 5, prot: 1.2, fat: 2.5, defUnit: "150", defAmt: 1 },
+        { name: "Elma", cal: 52, carb: 14, prot: 0.3, fat: 0.2, defUnit: "60", defAmt: 2 },
+        { name: "Muz", cal: 89, carb: 23, prot: 1.1, fat: 0.3, defUnit: "60", defAmt: 2 },
+        { name: "Portakal / Mandalina", cal: 47, carb: 12, prot: 0.9, fat: 0.1, defUnit: "60", defAmt: 2 },
+        { name: "Ceviz / Badem / Fındık", cal: 600, carb: 15, prot: 18, fat: 54, defUnit: "1", defAmt: 25 },
+        { name: "Zeytinyağı / Tereyağı", cal: 884, carb: 0, prot: 0, fat: 100, defUnit: "15", defAmt: 1 },
+        { name: "Bal / Reçel", cal: 304, carb: 82, prot: 0.3, fat: 0, defUnit: "15", defAmt: 1 },
+        { name: "Türk Kahvesi / Filtre Kahve (Şekersiz)", cal: 2, carb: 0, prot: 0.2, fat: 0, defUnit: "200", defAmt: 1 },
+        { name: "Sütlü Kahve / Latte", cal: 55, carb: 4.5, prot: 3, fat: 2.8, defUnit: "200", defAmt: 1 },
+        { name: "Simit", cal: 320, carb: 58, prot: 10, fat: 6, defUnit: "100", defAmt: 1 },
+        { name: "Lahmacun", cal: 220, carb: 28, prot: 11, fat: 7, defUnit: "100", defAmt: 1.2 }
+    ];
+
+    const MEAL_TYPES = [
+        { id: "breakfast", title: "🍳 Sabah Kahvaltısı" },
+        { id: "lunch", title: "🍲 Öğle Yemeği" },
+        { id: "dinner", title: "🍽️ Akşam Yemeği" },
+        { id: "snack", title: "🍏 Ara Öğün / Atıştırmalık" }
+    ];
+
+    // --- UYGULAMA DURUMU (STATE) ---
+    let authMode = 'login';
+    let currentUser = null;
+    let selectedDateKey = getTodayKey();
+    let activeMealType = 'breakfast';
+    let selectedBaseFood = null; // 100g baz değerleri
+    let searchTimeout = null;
+
+    // --- TARİH YARDIMCILARI ---
+    function getTodayKey() {
+        const d = new Date();
+        return d.toISOString().split('T')[0];
+    }
+
+    function getLast30Days() {
+        const days = [];
+        const dayNames = ["Paz", "Pzt", "Sal", "Çar", "Per", "Cum", "Cmt"];
+        for (let i = 29; i >= 0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const key = d.toISOString().split('T')[0];
+            days.push({
+                key: key,
+                dayName: i === 0 ? "Bugün" : (i === 1 ? "Dün" : dayNames[d.getDay()]),
+                dayNum: d.getDate()
+            });
+        }
+        return days;
+    }
+
+    // --- VERİTABANI (LOCALSTORAGE) YÖNETİMİ ---
+    function getAllUsers() {
+        return JSON.parse(localStorage.getItem('fitlife_users') || '{}');
+    }
+
+    function saveAllUsers(users) {
+        localStorage.setItem('fitlife_users', JSON.stringify(users));
+    }
+
+    function pruneOldLogs(userObj) {
+        if (!userObj.logs) userObj.logs = {};
+        const validKeys = new Set(getLast30Days().map(d => d.key));
+        Object.keys(userObj.logs).forEach(k => {
+            if (!validKeys.has(k)) delete userObj.logs[k];
+        });
+    }
+
+    function autoSaveUser() {
+        if (!currentUser) return;
+        pruneOldLogs(currentUser);
+        const users = getAllUsers();
+        users[currentUser.username] = currentUser;
+        saveAllUsers(users);
+    }
+
+    // --- GİRİŞ & KAYIT İŞLEMLERİ ---
+    function switchAuthTab(mode) {
+        authMode = mode;
+        document.getElementById('tabLoginBtn').classList.toggle('active', mode === 'login');
+        document.getElementById('tabRegBtn').classList.toggle('active', mode === 'register');
+        document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Giriş Yap' : 'Hesap Oluştur';
+        document.getElementById('authError').classList.add('hidden');
+    }
+
+    function showAuthError(msg) {
+        const el = document.getElementById('authError');
+        el.textContent = msg;
+        el.classList.remove('hidden');
+    }
+
+    function handleAuth(e) {
+        e.preventDefault();
+        const username = document.getElementById('authUser').value.trim().toLowerCase();
+        const password = document.getElementById('authPass').value.trim();
+
+        if (!username || !password) return;
+
+        const users = getAllUsers();
+
+        if (authMode === 'register') {
+            if (users[username]) {
+                return showAuthError('Bu kullanıcı adı zaten alınmış. Lütfen giriş yapın veya farklı bir ad seçin.');
+            }
+            currentUser = {
+                username: username,
+                password: password,
+                profile: null,
+                logs: {}
+            };
+            users[username] = currentUser;
+            saveAllUsers(users);
+            localStorage.setItem('fitlife_session', username);
+            openProfileSetup();
+        } else {
+            const user = users[username];
+            if (!user || user.password !== password) {
+                return showAuthError('Kullanıcı adı veya şifre hatalı.');
+            }
+            currentUser = user;
+            localStorage.setItem('fitlife_session', username);
+            if (!currentUser.profile) {
+                openProfileSetup();
+            } else {
+                showDashboard();
+            }
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('fitlife_session');
+        currentUser = null;
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        document.getElementById('setupScreen').classList.add('hidden');
+        document.getElementById('authScreen').classList.remove('hidden');
+        document.getElementById('authPass').value = '';
+    }
+
+    // --- PROFİL VE AKILLI KALORİ HESAPLAMA ---
+    function openProfileSetup() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.add('hidden');
+        document.getElementById('setupScreen').classList.remove('hidden');
+
+        if (currentUser && currentUser.profile) {
+            const p = currentUser.profile;
+            document.getElementById('pGender').value = p.gender;
+            document.getElementById('pAge').value = p.age;
+            document.getElementById('pHeight').value = p.height;
+            document.getElementById('pWeight').value = p.weight;
+            document.getElementById('pActivity').value = p.activity;
+            document.getElementById('pGoal').value = p.goalDiff;
+            document.getElementById('tCal').value = p.targetCal;
+            document.getElementById('tCarb').value = p.targetCarb;
+            document.getElementById('tProt').value = p.targetProt;
+            document.getElementById('tFat').value = p.targetFat;
+        } else {
+            calculateSuggestions();
+        }
+    }
+
+    function calculateSuggestions() {
+        const gender = document.getElementById('pGender').value;
+        const age = parseFloat(document.getElementById('pAge').value) || 25;
+        const height = parseFloat(document.getElementById('pHeight').value) || 170;
+        const weight = parseFloat(document.getElementById('pWeight').value) || 70;
+        const activity = parseFloat(document.getElementById('pActivity').value) || 1.375;
+        const goalDiff = parseFloat(document.getElementById('pGoal').value) || 0;
+
+        // Mifflin-St Jeor Denklemi
+        let bmr = (10 * weight) + (6.25 * height) - (5 * age);
+        bmr += (gender === 'male') ? 5 : -161;
+
+        let tdee = Math.round((bmr * activity) + goalDiff);
+        if (tdee < 1200) tdee = 1200;
+
+        // Ortalama Dengeli Makro Dağılımı (%45 Karb, %25 Protein, %30 Yağ)
+        const carb = Math.round((tdee * 0.45) / 4);
+        const prot = Math.round((tdee * 0.25) / 4);
+        const fat = Math.round((tdee * 0.30) / 9);
+
+        document.getElementById('tCal').value = tdee;
+        document.getElementById('tCarb').value = carb;
+        document.getElementById('tProt').value = prot;
+        document.getElementById('tFat').value = fat;
+    }
+
+    function saveProfile() {
+        currentUser.profile = {
+            gender: document.getElementById('pGender').value,
+            age: parseInt(document.getElementById('pAge').value) || 25,
+            height: parseInt(document.getElementById('pHeight').value) || 170,
+            weight: parseInt(document.getElementById('pWeight').value) || 70,
+            activity: document.getElementById('pActivity').value,
+            goalDiff: document.getElementById('pGoal').value,
+            targetCal: parseInt(document.getElementById('tCal').value) || 2000,
+            targetCarb: parseInt(document.getElementById('tCarb').value) || 225,
+            targetProt: parseInt(document.getElementById('tProt').value) || 125,
+            targetFat: parseInt(document.getElementById('tFat').value) || 65
+        };
+        autoSaveUser();
+        showDashboard();
+    }
+
+    // --- ANA EKRAN (DASHBOARD) YÖNETİMİ ---
+    function getDayLog(dateKey) {
+        if (!currentUser.logs[dateKey]) {
+            currentUser.logs[dateKey] = {
+                water: 0,
+                meals: { breakfast: [], lunch: [], dinner: [], snack: [] }
+            };
+        }
+        return currentUser.logs[dateKey];
+    }
+
+    function showDashboard() {
+        document.getElementById('authScreen').classList.add('hidden');
+        document.getElementById('setupScreen').classList.add('hidden');
+        document.getElementById('dashboardScreen').classList.remove('hidden');
+
+        document.getElementById('welcomeText').textContent = `Merhaba, ${currentUser.username}!`;
+        renderDateStrip();
+        renderDayData();
+    }
+
+    function renderDateStrip() {
+        const strip = document.getElementById('dateStrip');
+        const days = getLast30Days();
+        strip.innerHTML = '';
+
+        days.forEach(d => {
+            const log = currentUser.logs[d.key];
+            const hasData = log && (log.water > 0 || Object.values(log.meals).some(arr => arr.length > 0));
+            const item = document.createElement('div');
+            item.className = `date-item ${d.key === selectedDateKey ? 'active' : ''} ${hasData ? 'has-data' : ''}`;
+            item.innerHTML = `<div class="d-name">${d.dayName}</div><div class="d-num">${d.dayNum}</div>`;
+            item.onclick = () => {
+                selectedDateKey = d.key;
+                renderDateStrip();
+                renderDayData();
+            };
+            strip.appendChild(item);
+        });
+
+        // Seçili tarihe otomatik kaydır
+        setTimeout(() => {
+            const activeEl = strip.querySelector('.date-item.active');
+            if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
+    }
+
+    function renderDayData() {
+        const p = currentUser.profile;
+        const log = getDayLog(selectedDateKey);
+
+        let totalCal = 0, totalCarb = 0, totalProt = 0, totalFat = 0;
+
+        // Öğünleri oluştur ve toplamları hesapla
+        const mealsContainer = document.getElementById('mealsContainer');
+        mealsContainer.innerHTML = '';
+
+        MEAL_TYPES.forEach(m => {
+            const items = log.meals[m.id] || [];
+            let mealCal = 0;
+
+            items.forEach(it => {
+                totalCal += it.cal;
+                totalCarb += it.carb;
+                totalProt += it.prot;
+                totalFat += it.fat;
+                mealCal += it.cal;
+            });
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            let listHtml = '';
+            if (items.length > 0) {
+                listHtml = `<ul class="food-list">` + items.map((it, idx) => `
+                    <li class="food-item">
+                        <div>
+                            <div class="food-item-name">${it.name}</div>
+                            <div class="food-item-meta">${it.unitLabel} • Karb: ${it.carb}g, Pro: ${it.prot}g, Yağ: ${it.fat}g</div>
+                        </div>
+                        <div class="food-item-right">
+                            <span class="food-item-cal">${it.cal} kcal</span>
+                            <button class="del-btn" title="Sil" onclick="removeFood('${m.id}', ${idx})">✕</button>
+                        </div>
+                    </li>
+                `).join('') + `</ul>`;
+            }
+
+            card.innerHTML = `
+                <div class="meal-header">
+                    <div class="meal-title">${m.title}</div>
+                    <div class="meal-cal">${mealCal} kcal</div>
+                </div>
+                ${listHtml}
+                <button class="add-meal-btn" onclick="openFoodModal('${m.id}', '${m.title}')">+ Besin Ekle</button>
+            `;
+            mealsContainer.appendChild(card);
+        });
+
+        // Üst özet barlarını güncelle
+        document.getElementById('curCal').textContent = totalCal;
+        document.getElementById('goalCal').textContent = p.targetCal;
+
+        const diff = p.targetCal - totalCal;
+        const badge = document.getElementById('calStatusBadge');
+        const calBar = document.getElementById('calProgressBar');
+
+        if (diff >= 0) {
+            badge.textContent = `${diff} kcal eksik (Kalan)`;
+            badge.className = 'status-badge badge-ok';
+            calBar.classList.remove('over');
+        } else {
+            badge.textContent = `${Math.abs(diff)} kcal fazla!`;
+            badge.className = 'status-badge badge-over';
+            calBar.classList.add('over');
+        }
+
+        const calPct = Math.min(100, Math.round((totalCal / p.targetCal) * 100));
+        calBar.style.width = `${calPct}%`;
+
+        // Makrolar
+        document.getElementById('curCarb').textContent = Math.round(totalCarb);
+        document.getElementById('goalCarb').textContent = p.targetCarb;
+        document.getElementById('barCarb').style.width = `${Math.min(100, (totalCarb / p.targetCarb) * 100)}%`;
+
+        document.getElementById('curProt').textContent = Math.round(totalProt);
+        document.getElementById('goalProt').textContent = p.targetProt;
+        document.getElementById('barProt').style.width = `${Math.min(100, (totalProt / p.targetProt) * 100)}%`;
+
+        document.getElementById('curFat').textContent = Math.round(totalFat);
+        document.getElementById('goalFat').textContent = p.targetFat;
+        document.getElementById('barFat').style.width = `${Math.min(100, (totalFat / p.targetFat) * 100)}%`;
+
+        // Su Takibi
+        const water = log.water || 0;
+        document.getElementById('waterCount').textContent = water;
+        document.getElementById('waterMl').textContent = water * 200;
+    }
+
+    function changeWater(delta) {
+        const log = getDayLog(selectedDateKey);
+        log.water = Math.max(0, (log.water || 0) + delta);
+        autoSaveUser();
+        renderDayData();
+        renderDateStrip();
+    }
+
+    function removeFood(mealId, index) {
+        const log = getDayLog(selectedDateKey);
+        log.meals[mealId].splice(index, 1);
+        autoSaveUser();
+        renderDayData();
+        renderDateStrip();
+    }
+
+    // --- YEMEK ARAMA VE EKLEME (YEREL + İNTERNET API) ---
+    function openFoodModal(mealId, mealTitle) {
+        activeMealType = mealId;
+        document.getElementById('modalMealTitle').textContent = `${mealTitle} İçin Ekle`;
+        document.getElementById('foodSearchInput').value = '';
+        document.getElementById('searchResults').classList.add('hidden');
+        document.getElementById('fName').value = '';
+        document.getElementById('fAmount').value = 1;
+        document.getElementById('fUnit').value = "100";
+        document.getElementById('fCal').value = 0;
+        document.getElementById('fCarb').value = 0;
+        document.getElementById('fProt').value = 0;
+        document.getElementById('fFat').value = 0;
+        selectedBaseFood = null;
+
+        document.getElementById('foodModal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('foodSearchInput').focus(), 100);
+    }
+
+    function closeFoodModal() {
+        document.getElementById('foodModal').classList.add('hidden');
+    }
+
+    function handleFoodSearch(query) {
+        const q = query.trim().toLowerCase();
+        const resBox = document.getElementById('searchResults');
+        const statusEl = document.getElementById('searchStatus');
+
+        if (q.length < 2) {
+            resBox.classList.add('hidden');
+            statusEl.classList.add('hidden');
+            return;
+        }
+
+        // 1. Önce yerel hızlı veritabanında filtrele
+        const localMatches = LOCAL_FOODS.filter(f => f.name.toLowerCase().includes(q));
+        renderSearchResults(localMatches, []);
+
+        // 2. İnternetten (OpenFoodFacts API) canlı ara
+        clearTimeout(searchTimeout);
+        statusEl.classList.remove('hidden');
+        searchTimeout = setTimeout(async () => {
+            try {
+                const url = `https://tr.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=8`;
+                const res = await fetch(url);
+                const data = await res.json();
+                statusEl.classList.add('hidden');
+
+                const onlineMatches = [];
+                if (data && data.products) {
+                    data.products.forEach(p => {
+                        const name = p.product_name_tr || p.product_name;
+                        const nut = p.nutriments;
+                        if (name && nut && (nut['energy-kcal_100g'] || nut['energy_100g'])) {
+                            const cal100 = Math.round(nut['energy-kcal_100g'] || (nut['energy_100g'] / 4.184) || 0);
+                            if (cal100 > 0) {
+                                onlineMatches.push({
+                                    name: name,
+                                    cal: cal100,
+                                    carb: Math.round(nut.carbohydrates_100g || 0),
+                                    prot: Math.round(nut.proteins_100g || 0),
+                                    fat: Math.round(nut.fat_100g || 0),
+                                    defUnit: "100",
+                                    defAmt: 1,
+                                    isOnline: true
+                                });
+                            }
+                        }
+                    });
+                }
+                renderSearchResults(localMatches, onlineMatches);
+            } catch (err) {
+                statusEl.classList.add('hidden');
+            }
+        }, 400);
+    }
+
+    function renderSearchResults(localArr, onlineArr) {
+        const resBox = document.getElementById('searchResults');
+        const combined = [...localArr, ...onlineArr];
+
+        if (combined.length === 0) {
+            resBox.classList.add('hidden');
+            return;
+        }
+
+        resBox.innerHTML = combined.map((item, idx) => `
+            <div class="search-item" onclick='selectFoodItem(${JSON.stringify(item).replace(/'/g, "&#39;")})'>
+                <div>
+                    <div class="search-item-title">${item.name} ${item.isOnline ? '<span style="font-size:10px; color:var(--blue);">(İnternet)</span>' : ''}</div>
+                    <div class="search-item-sub">100g: ${item.cal} kcal | Karb: ${item.carb}g • Pro: ${item.prot}g • Yağ: ${item.fat}g</div>
+                </div>
+                <span style="font-size:13px; font-weight:700; color:var(--emerald-dark);">Seç</span>
+            </div>
+        `).join('');
+
+        resBox.classList.remove('hidden');
+    }
+
+    function selectFoodItem(item) {
+        selectedBaseFood = item;
+        document.getElementById('fName').value = item.name;
+        document.getElementById('fUnit').value = item.defUnit || "100";
+        document.getElementById('fAmount').value = item.defAmt || 1;
+        document.getElementById('searchResults').classList.add('hidden');
+        recalcSelectedFood();
+    }
+
+    function recalcSelectedFood() {
+        if (!selectedBaseFood) return;
+        const amount = parseFloat(document.getElementById('fAmount').value) || 0;
+        const unitGrams = parseFloat(document.getElementById('fUnit').value) || 100;
+        const totalGrams = amount * unitGrams;
+        const ratio = totalGrams / 100;
+
+        document.getElementById('fCal').value = Math.round(selectedBaseFood.cal * ratio);
+        document.getElementById('fCarb').value = Math.round(selectedBaseFood.carb * ratio);
+        document.getElementById('fProt').value = Math.round(selectedBaseFood.prot * ratio);
+        document.getElementById('fFat').value = Math.round(selectedBaseFood.fat * ratio);
+    }
+
+    function confirmAddFood() {
+        const name = document.getElementById('fName').value.trim() || document.getElementById('foodSearchInput').value.trim();
+        if (!name) {
+            alert("Lütfen bir besin adı seçin veya yazın.");
+            return;
+        }
+
+        const amount = parseFloat(document.getElementById('fAmount').value) || 1;
+        const unitSelect = document.getElementById('fUnit');
+        const unitText = unitSelect.options[unitSelect.selectedIndex].text.split(' (')[0];
+
+        const foodEntry = {
+            name: name,
+            unitLabel: `${amount} ${unitText}`,
+            cal: parseInt(document.getElementById('fCal').value) || 0,
+            carb: parseInt(document.getElementById('fCarb').value) || 0,
+            prot: parseInt(document.getElementById('fProt').value) || 0,
+            fat: parseInt(document.getElementById('fFat').value) || 0
+        };
+
+        const log = getDayLog(selectedDateKey);
+        log.meals[activeMealType].push(foodEntry);
+
+        autoSaveUser();
+        closeFoodModal();
+        renderDayData();
+        renderDateStrip();
+    }
+
+    // --- BAŞLANGIÇ KONTROLÜ ---
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedSession = localStorage.getItem('fitlife_session');
+        if (savedSession) {
+            const users = getAllUsers();
+            if (users[savedSession]) {
+                currentUser = users[savedSession];
+                if (currentUser.profile) {
+                    showDashboard();
+                } else {
+                    openProfileSetup();
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
